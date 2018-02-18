@@ -64,6 +64,13 @@ textarea {
     margin-bottom: 10px;
 }
 
+.authorization-row {
+    margin-top: 20%;
+}
+
+#login-btn {
+    width: 100%;
+}
 
 
 
