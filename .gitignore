@@ -178,5 +178,7 @@ bh_unicode_properties.cache
 # https://packagecontrol.io/packages/sublime-github
 GitHub.sublime-settings
 
+# Valentina
+/uploader/upload-dir
 
 # End of https://www.gitignore.io/api/web,git,java,maven,java-web,intellij,sublimetext,intellij+all
