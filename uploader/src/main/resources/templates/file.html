@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.thmyeleaf.org">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Uploader</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/normalize.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        <!--[if lt IE 9]>
+        <script src="js/vendor/html5-3.6-respond-1.4.2.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">User1</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="groups.html">Groups <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="authorization.html">Log out</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="alert" th:classappend="${#vars['flash.messageType']}"
+                         role="alert" th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}"></div>
+                </div>
+            </div>
+            <div class="row upload-row justify-content-center">
+                <div class="col-10">
+                    <form id="upload-form" method="post" enctype="multipart/form-data" action="/files">
+                        <div class="custom-file">
+                            <input type="file" name="file" class="custom-file-input" id="customFile" onchange="$('#upload-file-info').text($(this).val());">
+                            <label id="upload-file-info" class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-2">
+                    <button form="upload-form" type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </div>
+
+            <div class="row group-row">
+                <div class="col-6">
+                    <select class="custom-select mb-3">
+                        <option selected>Choose your group</option>
+                        <option value="1">Group1</option>
+                        <option value="2">Group2</option>
+                        <option value="3">Group3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row table-row">
+                <div class="col">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Format</th>
+                                <th scope="col">file_id</th>
+                                <th scope="col">file_name</th>
+                                <th scope="col">size</th>
+                                <th scope="col">download_date</th>
+                                <th scope="col">user_login</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="fileEntity : ${page.content}">
+                                <td th:text="${fileEntity.format}" />
+                                <td th:text="${fileEntity.fileId}" />
+                                <td th:text="${fileEntity.filename}" />
+                                <td th:text="${fileEntity.size}" />
+                                <td th:text="${fileEntity.uploadDate}" />
+                                <td th:text="${fileEntity.userId.login}" />
+                                <td><a href="#">download file</a></td>
+                            </tr>
+                        </tbody>
+                    </table>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="flash">
+                        <h4 th:text="${page.size} + ' item(s) per page'" />
+
+                        <ul>
+                            <li th:if="${prev}"><a th:href="@{/(size=${prev.pageSize}, page=${prev.pageNumber})}" >Previous</a></li>
+                            <li th:if="${next}"><a th:href="@{/(size=${next.pageSize}, page=${next.pageNumber})}" >Next</a></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
