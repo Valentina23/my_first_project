@@ -22,18 +22,6 @@ import java.io.IOException;
 @Controller
 public class FileController {
 
-/*    @RequestMapping(value = "/")
-    public ResponseEntity<String> hello() {
-        String hello = "hello";
-
-        return ResponseEntity.ok()
-                .contentLength(hello.getBytes().length)
-                .contentType(MediaType.TEXT_PLAIN)
-                .body(hello);
-    }
-    */
-
-
     private static final String BASE_PATH = "/files";
     private static final String FILENAME = "{filename:.+}";
 
@@ -61,16 +49,16 @@ public class FileController {
 
     @RequestMapping(method = RequestMethod.GET, value = BASE_PATH + "/" + FILENAME)
     @ResponseBody
-    public ResponseEntity<?> oneFile(@PathVariable String filename) {
+    public ResponseEntity<?> downloadFile(@PathVariable String filename) {
         try {
             File file = fileService.findOneFile(filename);
+
             return ResponseEntity.ok()
                     .contentLength(file.length())
-                    .contentType(MediaType.ALL)
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(new InputStreamResource(new FileInputStream(file)));
         } catch (IOException e) {
-            return ResponseEntity.badRequest()
-                    .body("Couldn't find " + filename + " => " + e.getMessage());
+            return ResponseEntity.badRequest().body("Couldn't find " + filename + " => " + e.getMessage());
         }
     }
 
