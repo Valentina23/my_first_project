@@ -84,7 +84,9 @@
                                 <td th:text="${fileEntity.size}" />
                                 <td th:text="${fileEntity.uploadDate}" />
                                 <td th:text="${fileEntity.userId.login}" />
-                                <td><a href="#">download file</a></td>
+                                <td>
+                                    <a th:href="@{'/files/' + ${fileEntity.filename} + '.' + ${fileEntity.format}}">download file</a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>                    
