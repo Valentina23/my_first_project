@@ -63,7 +63,7 @@ public class FileController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = BASE_PATH)
-    public String createFile (MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String createFile(MultipartFile file, RedirectAttributes redirectAttributes) {
 
         if (file == null || file.getSize() == 0 || file.getOriginalFilename().equals("")) {
             return "redirect:/";

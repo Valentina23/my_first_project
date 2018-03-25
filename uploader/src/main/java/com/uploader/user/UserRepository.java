@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserRepository extends PagingAndSortingRepository<UserEntity, Long> {
 
     List<UserEntity> findUsersByGroup(GroupEntity group);
+
+    UserEntity findUserByLogin(String login);
 }
