@@ -1,6 +1,5 @@
 package com.uploader.file;
 
-import com.uploader.group.GroupEntity;
 import com.uploader.group.GroupRepository;
 import com.uploader.user.UserEntity;
 import com.uploader.user.UserRepository;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class FileService {
@@ -43,12 +41,9 @@ public class FileService {
         return new File(Paths.get(UPLOAD_ROOT).toString() + "/" + filename);
     }
 
-    public void createFile(MultipartFile file) throws IOException {
+    public void createFile(MultipartFile file, String login) throws IOException {
         if (!file.isEmpty()) {
-
-            GroupEntity groupEntity = groupRepository.findGroupByGroupname("group1");
-            List<UserEntity> users = userRepository.findUsersByGroup(groupEntity);
-            UserEntity user = users.get(0);
+            UserEntity user = userRepository.findUserByLogin(login);
 
             String filename = getFilename(file.getOriginalFilename());
             String fileExtension = getFileExtension(file.getOriginalFilename());
