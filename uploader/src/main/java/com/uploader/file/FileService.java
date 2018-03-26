@@ -1,10 +1,12 @@
 package com.uploader.file;
 
+import com.uploader.group.GroupEntity;
 import com.uploader.group.GroupRepository;
 import com.uploader.user.UserEntity;
 import com.uploader.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class FileService {
@@ -33,8 +37,19 @@ public class FileService {
         this.groupRepository = groupRepository;
     }
 
-    public Page<FileEntity> findPage(Pageable pageable) {
-        return fileRepository.findAll(pageable);
+    public Page<FileEntity> findPage(Pageable pageable, String login) {
+        UserEntity user = userRepository.findUserByLogin(login);
+        GroupEntity group = user.getGroup();
+
+        Page<FileEntity> files  = fileRepository.findAll(pageable);
+        List<FileEntity> list = new ArrayList<>();
+        for (FileEntity file : files) {
+            if (file.getGroup().getGroupId() == group.getGroupId()) {
+                list.add(file);
+            }
+        }
+
+        return new PageImpl<>(list, pageable, list.size());
     }
 
     public File findOneFile(String filename) {

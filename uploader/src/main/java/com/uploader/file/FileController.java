@@ -36,7 +36,10 @@ public class FileController {
 
     @RequestMapping(value = "/")
     public String file(Model model, Pageable pageable) {
-        final Page<FileEntity> page = fileService.findPage(pageable);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        final Page<FileEntity> page = fileService.findPage(pageable, auth.getPrincipal().toString());
+
         model.addAttribute("page", page);
         if (page.hasPrevious()) {
             model.addAttribute("prev", pageable.previousOrFirst());

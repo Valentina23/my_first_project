@@ -64,6 +64,11 @@ textarea {
     margin-bottom: 10px;
 }
 
+.table-row {
+    margin-top: 200px;
+    margin-bottom: 10px;
+}
+
 .authorization-row {
     margin-top: 20%;
 }

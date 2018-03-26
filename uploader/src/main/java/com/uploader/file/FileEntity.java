@@ -97,7 +97,7 @@ public class FileEntity {
         this.path = path;
     }
 
-    public GroupEntity getGroupId() {
+    public GroupEntity getGroup() {
         return groupId;
     }
 
