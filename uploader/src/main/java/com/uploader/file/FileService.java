@@ -1,7 +1,6 @@
 package com.uploader.file;
 
 import com.uploader.group.GroupEntity;
-import com.uploader.group.GroupRepository;
 import com.uploader.user.UserEntity;
 import com.uploader.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +27,10 @@ public class FileService {
 
     private final UserRepository userRepository;
 
-    private final GroupRepository groupRepository;
-
     @Autowired
-    public FileService(FileRepository fileRepository, UserRepository userRepository, GroupRepository groupRepository) {
+    public FileService(FileRepository fileRepository, UserRepository userRepository) {
         this.fileRepository = fileRepository;
         this.userRepository = userRepository;
-        this.groupRepository = groupRepository;
     }
 
     public Page<FileEntity> findPage(Pageable pageable, String login) {
