@@ -44,16 +44,14 @@ public class MailController {
 
         List<UserEntity> listOfUsers = mailService.findUsersTo(auth.getPrincipal().toString());
 
-        // TODO: add correct userTo info
+        // TODO: add correct userTo
         UserEntity userTo = listOfUsers.get(0);
 
         log.info("Sending email about uploading files");
 
         Mail mail = new Mail();
-
-        // TODO: add correct emailTo
         mail.setFrom("vvo.082015@gmail.com");
-        mail.setTo("m.domova@yandex.com");
+        mail.setTo(userTo.getEmail().toString());
         mail.setSubject("Uploading new files in your's group");
 
         // TODO: add correct files info
