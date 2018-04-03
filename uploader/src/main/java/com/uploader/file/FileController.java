@@ -35,7 +35,7 @@ public class FileController {
     }
 
     @RequestMapping(value = "/")
-    public String file(Model model, Pageable pageable) {
+    public String file(Pageable pageable, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         final Page<FileEntity> page = fileService.findPage(pageable, auth.getPrincipal().toString());

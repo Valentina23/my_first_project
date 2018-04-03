@@ -69,6 +69,19 @@
             </table>
         </div>
     </div>
+<!--    <div class="row">
+        <div class="col">
+            <div class="flash">
+                <h4 th:text="${page.size} + ' item(s) per page'" />
+
+                <ul>
+                    <li th:if="${prev}"><a th:href="@{/(size=${prev.pageSize}, page=${prev.pageNumber})}" >Previous</a></li>
+                    <li th:if="${next}"><a th:href="@{/(size=${next.pageSize}, page=${next.pageNumber})}" >Next</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </div>-->
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

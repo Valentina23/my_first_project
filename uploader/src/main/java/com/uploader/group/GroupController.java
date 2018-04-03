@@ -22,7 +22,7 @@ public class GroupController {
     }
 
     @RequestMapping(value = "/group", method = RequestMethod.GET)
-    public String groupForm(Model model, Pageable pageable) {
+    public String groupForm(Pageable pageable, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         final Page<UserEntity> page = groupService.findPageByUser(pageable, auth.getPrincipal().toString());
