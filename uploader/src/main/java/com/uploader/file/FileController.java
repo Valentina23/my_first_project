@@ -1,5 +1,6 @@
 package com.uploader.file;
 
+import com.uploader.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
@@ -29,9 +30,12 @@ public class FileController {
 
     private final FileService fileService;
 
+    private final MailService mailService;
+
     @Autowired
-    public FileController(FileService fileService) {
+    public FileController(FileService fileService, MailService mailService) {
         this.fileService = fileService;
+        this.mailService = mailService;
     }
 
     @RequestMapping(value = "/")
@@ -79,9 +83,7 @@ public class FileController {
 
             fileService.createFile(file, auth.getPrincipal().toString());
 
-            redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded "
-                    + file.getOriginalFilename());
-            redirectAttributes.addFlashAttribute("flash.messageType", "alert-success");
+            mailService.sendEmail(redirectAttributes);
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("flash.message", "Failed to upload "
                     + file.getOriginalFilename() + " => " + e.getMessage());
