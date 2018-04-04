@@ -83,7 +83,7 @@ public class FileController {
 
             fileService.createFile(file, auth.getPrincipal().toString());
 
-            mailService.sendEmail(redirectAttributes);
+            mailService.sendEmail(file.getOriginalFilename(), redirectAttributes);
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("flash.message", "Failed to upload "
                     + file.getOriginalFilename() + " => " + e.getMessage());

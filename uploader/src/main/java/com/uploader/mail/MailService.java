@@ -60,7 +60,7 @@ public class MailService {
         return listOfUsers;
     }
 
-    public String sendEmail(RedirectAttributes redirectAttributes) {
+    public String sendEmail(String filename, RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserEntity userFrom = userRepository.findUserByLogin(auth.getPrincipal().toString());
 
@@ -76,11 +76,10 @@ public class MailService {
         mail.setTo(userTo.getEmail().toString());
         mail.setSubject("Uploading new files in your's group");
 
-        // TODO: add correct files info
         mail.setContent("Уважаемый(-ая) " + userTo.getFirstname() + " " + userTo.getLastname() + " ! \n\n"
-                + " Уведомляем Вас о том, что пользователем " + userFrom.getLogin() + " Вашей группы "
-                + userFrom.getGroup().getGroupname() + " был загружен следующий файл: \n" + "filename" + " . \n\n"
-                + " С уважением, \n" + " Uploader.");
+                + "Уведомляем Вас о том, что пользователем " + userFrom.getLogin() + " Вашей группы "
+                + userFrom.getGroup().getGroupname() + " был загружен следующий файл: \n" + filename + " . \n\n"
+                + "С уважением, \n" + "Uploader.");
         try {
             mailService.sendMessage(mail);
 
