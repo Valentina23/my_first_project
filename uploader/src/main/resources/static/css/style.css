@@ -85,6 +85,17 @@ textarea {
     padding: 1em;
 }
 
+.modal-form {
+    margin-top: 250px;
+}
+
+.notification {
+    margin-top: 25px;
+    margin-left: 86%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+}
+
 /* ==========================================================================
    Media Queries
    ========================================================================== */
