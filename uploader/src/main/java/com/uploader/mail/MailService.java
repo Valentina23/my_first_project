@@ -1,6 +1,5 @@
 package com.uploader.mail;
 
-import com.uploader.UploaderApplication;
 import com.uploader.user.UserEntity;
 import com.uploader.user.UserRepository;
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ public class MailService {
     @Autowired
     private JavaMailSender emailSender;
 
-    private Logger log = LoggerFactory.getLogger(UploaderApplication.class);
+    private Logger log = LoggerFactory.getLogger(MailService.class);
 
     @Autowired
     private MailService mailService;
@@ -87,6 +86,8 @@ public class MailService {
                     + " " + userTo.getLastname() + " successfully!");
             redirectAttributes.addFlashAttribute("flash.messageType", "alert-success");
         } catch (Exception e) {
+            log.error("Unable to send email!", e);
+
             redirectAttributes.addFlashAttribute("flash.message", "Error in sending email to " + userTo.getFirstname()
                     + " " + userTo.getLastname() + " : " + e.getMessage());
             redirectAttributes.addFlashAttribute("flash.messageType", "alert-danger");

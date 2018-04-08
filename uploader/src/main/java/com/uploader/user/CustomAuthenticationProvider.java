@@ -1,5 +1,7 @@
 package com.uploader.user;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +23,8 @@ import java.util.List;
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     private final UserRepository userRepository;
+
+    private Logger log = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
 
     @Autowired
     public CustomAuthenticationProvider(UserRepository userRepository) {
@@ -69,8 +73,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             digest.update(StandardCharsets.UTF_8.encode(str));
             return String.format("%032x", new BigInteger(1, digest.digest()));
         } catch (NoSuchAlgorithmException e) {
-            // TODO: Add logging
-            e.printStackTrace();
+            log.error("Unable to convert to MD5", e);
+
+            e.getMessage();
         }
 
         throw new IllegalArgumentException();

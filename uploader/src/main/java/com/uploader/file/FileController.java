@@ -1,6 +1,8 @@
 package com.uploader.file;
 
 import com.uploader.mail.MailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
@@ -31,6 +33,8 @@ public class FileController {
     private final FileService fileService;
 
     private final MailService mailService;
+
+    private Logger log = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
     public FileController(FileService fileService, MailService mailService) {
@@ -67,6 +71,8 @@ public class FileController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(new InputStreamResource(new FileInputStream(file)));
         } catch (IOException e) {
+            log.error("Unable to download file!", e);
+
             return ResponseEntity.badRequest().body("Couldn't find " + filename + " => " + e.getMessage());
         }
     }
@@ -85,6 +91,8 @@ public class FileController {
 
             mailService.sendEmail(file.getOriginalFilename(), redirectAttributes);
         } catch (IOException e) {
+            log.error("Unable to upload file!", e);
+
             redirectAttributes.addFlashAttribute("flash.message", "Failed to upload "
                     + file.getOriginalFilename() + " => " + e.getMessage());
             redirectAttributes.addFlashAttribute("flash.messageType", "alert-danger");

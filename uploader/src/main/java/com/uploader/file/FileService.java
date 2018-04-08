@@ -3,6 +3,8 @@ package com.uploader.file;
 import com.uploader.group.GroupEntity;
 import com.uploader.user.UserEntity;
 import com.uploader.user.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,6 +28,8 @@ public class FileService {
     private final FileRepository fileRepository;
 
     private final UserRepository userRepository;
+
+    private Logger log = LoggerFactory.getLogger(FileService.class);
 
     @Autowired
     public FileService(FileRepository fileRepository, UserRepository userRepository) {
@@ -69,6 +73,8 @@ public class FileService {
         try {
             return fullFilename.substring(fullFilename.lastIndexOf(".") + 1);
         } catch (Exception e) {
+            log.error("Unable to get file extension!", e);
+
             return "";
         }
     }
@@ -77,6 +83,7 @@ public class FileService {
         try{
             return fullFilename.substring(0, fullFilename.lastIndexOf("."));
         } catch (Exception e) {
+            log.error("Unable to get filename!", e);
             return fullFilename;
         }
     }
