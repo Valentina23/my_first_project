@@ -59,22 +59,12 @@
             </form>
         </div>
         <div class="col-2">
-            <button form="upload-form" type="submit" class="btn btn-primary">Upload</button>
+            <!--<button id="upload btn" form="upload-form" type="submit" class="btn-info btn-lg btn-sm btn btn-primary"  data-toggle="modal" data-target="#myModal">Upload</button>-->
+            <button th:classappend="${#vars['flash.action']}" id="upload" form="upload-form" type="submit" class="btn btn-primary">Upload</button>
         </div>
     </div>
 
-    <button class="btn btn-info btn-lg btn-sm notification" type="button" data-toggle="modal" data-target="#myModal">Show notifications</button>
-
-    <!--    <div class="row group-row">
-            <div class="col-6">
-                <select class="custom-select mb-3">
-                    <option selected>Choose your group</option>
-                    <option value="1">Group1</option>
-                    <option value="2">Group2</option>
-                    <option value="3">Group3</option>
-                </select>
-            </div>
-        </div>-->
+    <button id="superBtn" class="btn btn-info btn-lg btn-sm notification" type="button" data-toggle="modal" data-target="#myModal">Show notifications</button>
 
     <div class="row table-row">
         <div class="col">
@@ -122,10 +112,10 @@
 </div>
 
 
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="js/main.js"></script>
+
 </body>
 </html>

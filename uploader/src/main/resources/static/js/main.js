@@ -1,12 +1,10 @@
-import java.security.MessageDigest;
-
-public class Quiz {
-
-    public static void main(String[] args) throws Exception {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] digest = md.digest("abracadabra".getBytes("UTF-8"));
-        for (byte b : digest) {
-            System.out.printf("%02x", b);
+$(document).ready(function () {
+    var uploaderBtn = $('#upload');
+    var classes = uploaderBtn.attr('class').split(" ");
+    for (x in classes) {
+        if (classes[x] == 'inAction') {
+            uploaderBtn.removeClass('inAction')
+            $('#superBtn')[0].click();
         }
     }
-}
+})

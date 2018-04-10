@@ -10,7 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class MailService {
         return listOfUsers;
     }
 
-    public String sendEmail(String filename, RedirectAttributes redirectAttributes) {
+    public String sendEmail(String filename) throws EmailSendException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserEntity userFrom = userRepository.findUserByLogin(auth.getPrincipal().toString());
 
@@ -72,26 +71,24 @@ public class MailService {
 
         Mail mail = new Mail();
         mail.setFrom("vvo.082015@gmail.com");
-        mail.setTo(userTo.getEmail().toString());
+        mail.setTo(userTo.getEmail());
         mail.setSubject("Uploading new files in your's group");
 
         mail.setContent("Уважаемый(-ая) " + userTo.getFirstname() + " " + userTo.getLastname() + " ! \n\n"
                 + "Уведомляем Вас о том, что пользователем " + userFrom.getLogin() + " Вашей группы "
-                + userFrom.getGroup().getGroupname() + " был загружен следующий файл: \n" + filename + " . \n\n"
-                + "С уважением, \n" + "Uploader.");
+                + userFrom.getGroup().getGroupname() + " был загружен следующий файл: \n"
+                + filename + " . \n\n"
+                + "С уважением, \n"
+                + "Uploader.");
         try {
             mailService.sendMessage(mail);
 
-            redirectAttributes.addFlashAttribute("flash.message", "Email sent to " + userTo.getFirstname()
-                    + " " + userTo.getLastname() + " successfully!");
-            redirectAttributes.addFlashAttribute("flash.messageType", "alert-success");
+            return "Email sent to " + userTo.getFirstname() + " " + userTo.getLastname() + " successfully!";
         } catch (Exception e) {
             log.error("Unable to send email!", e);
 
-            redirectAttributes.addFlashAttribute("flash.message", "Error in sending email to " + userTo.getFirstname()
-                    + " " + userTo.getLastname() + " : " + e.getMessage());
-            redirectAttributes.addFlashAttribute("flash.messageType", "alert-danger");
+            throw new EmailSendException("Error in sending email to " + userTo.getFirstname()
+                    + " " + userTo.getLastname() + " : " + e.getMessage(), e);
         }
-        return "redirect:/";
     }
 }

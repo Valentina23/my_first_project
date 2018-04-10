@@ -1,5 +1,6 @@
 package com.uploader.file;
 
+import com.uploader.mail.EmailSendException;
 import com.uploader.mail.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,13 +90,29 @@ public class FileController {
 
             fileService.createFile(file, auth.getPrincipal().toString());
 
-            mailService.sendEmail(file.getOriginalFilename(), redirectAttributes);
+            String result = mailService.sendEmail(file.getOriginalFilename());
+
+            redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded "
+                    + file.getOriginalFilename() + "!" + result);
+            redirectAttributes.addFlashAttribute("flash.messageType", "alert-success");
+
+            redirectAttributes.addFlashAttribute("flash.action", "inAction");
         } catch (IOException e) {
             log.error("Unable to upload file!", e);
 
             redirectAttributes.addFlashAttribute("flash.message", "Failed to upload "
                     + file.getOriginalFilename() + " => " + e.getMessage());
             redirectAttributes.addFlashAttribute("flash.messageType", "alert-danger");
+
+            redirectAttributes.addFlashAttribute("flash.action", "inAction");
+        } catch (EmailSendException e) {
+            log.error("Unable to send email!", e);
+
+            redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded "
+                    + file.getOriginalFilename() + " , but failed to send email " + " => " + e.getMessage());
+            redirectAttributes.addFlashAttribute("flash.messageType", "alert-danger");
+
+            redirectAttributes.addFlashAttribute("flash.action", "inAction");
         }
 
         return "redirect:/";
