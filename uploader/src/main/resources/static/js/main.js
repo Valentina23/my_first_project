@@ -4,7 +4,7 @@ $(document).ready(function () {
     for (x in classes) {
         if (classes[x] == 'inAction') {
             uploaderBtn.removeClass('inAction')
-            $('#superBtn')[0].click();
+            $('#superBtn').click();
         }
     }
 })

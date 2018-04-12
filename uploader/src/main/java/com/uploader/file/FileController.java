@@ -2,6 +2,8 @@ package com.uploader.file;
 
 import com.uploader.mail.EmailSendException;
 import com.uploader.mail.MailService;
+import com.uploader.user.UserEntity;
+import com.uploader.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +37,15 @@ public class FileController {
 
     private final MailService mailService;
 
+    private final UserRepository userRepository;
+
     private Logger log = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
-    public FileController(FileService fileService, MailService mailService) {
+    public FileController(FileService fileService, MailService mailService, UserRepository userRepository) {
         this.fileService = fileService;
         this.mailService = mailService;
+        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "/")
@@ -72,9 +77,9 @@ public class FileController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(new InputStreamResource(new FileInputStream(file)));
         } catch (IOException e) {
-            log.error("Unable to download file!", e);
+            log.error("Unable to download file!", e.getMessage());
 
-            return ResponseEntity.badRequest().body("Couldn't find " + filename + " => " + e.getMessage());
+            return ResponseEntity.badRequest().body("Couldn't find " + filename + " .");
         }
     }
 
@@ -85,8 +90,10 @@ public class FileController {
             return "redirect:/";
         }
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity userFrom = userRepository.findUserByLogin(auth.getPrincipal().toString());
+
         try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
             fileService.createFile(file, auth.getPrincipal().toString());
 
@@ -98,18 +105,19 @@ public class FileController {
 
             redirectAttributes.addFlashAttribute("flash.action", "inAction");
         } catch (IOException e) {
-            log.error("Unable to upload file!", e);
+            log.error("Unable to upload file!", e.getMessage());
 
             redirectAttributes.addFlashAttribute("flash.message", "Failed to upload "
-                    + file.getOriginalFilename() + " => " + e.getMessage());
+                    + file.getOriginalFilename() + " .");
             redirectAttributes.addFlashAttribute("flash.messageType", "alert-danger");
 
             redirectAttributes.addFlashAttribute("flash.action", "inAction");
         } catch (EmailSendException e) {
-            log.error("Unable to send email!", e);
+            log.error("Unable to send email to group " + userFrom.getGroup().getGroupname() + " !", e.getMessage());
 
             redirectAttributes.addFlashAttribute("flash.message", "Successfully uploaded "
-                    + file.getOriginalFilename() + " , but failed to send email " + " => " + e.getMessage());
+                    + file.getOriginalFilename() + " , but failed to send email to group " + userFrom.getGroup().getGroupname()
+                    + " .");
             redirectAttributes.addFlashAttribute("flash.messageType", "alert-danger");
 
             redirectAttributes.addFlashAttribute("flash.action", "inAction");

@@ -59,36 +59,40 @@ public class MailService {
     }
 
     public String sendEmail(String filename) throws EmailSendException {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserEntity userFrom = userRepository.findUserByLogin(auth.getPrincipal().toString());
 
         List<UserEntity> listOfUsers = mailService.findUsersTo(auth.getPrincipal().toString());
 
-        // TODO: add correct userTo
-        UserEntity userTo = listOfUsers.get(0);
-
-        log.info("Sending email about uploading files to " + userTo.getFirstname() + " " + userTo.getLastname());
-
-        Mail mail = new Mail();
-        mail.setFrom("vvo.082015@gmail.com");
-        mail.setTo(userTo.getEmail());
-        mail.setSubject("Uploading new files in your's group");
-
-        mail.setContent("Уважаемый(-ая) " + userTo.getFirstname() + " " + userTo.getLastname() + " ! \n\n"
-                + "Уведомляем Вас о том, что пользователем " + userFrom.getLogin() + " Вашей группы "
-                + userFrom.getGroup().getGroupname() + " был загружен следующий файл: \n"
-                + filename + " . \n\n"
-                + "С уважением, \n"
-                + "Uploader.");
         try {
-            mailService.sendMessage(mail);
+            for (UserEntity userTo : listOfUsers) {
+                if (userTo == userFrom) {
+                    continue;
+                }
 
-            return "Email sent to " + userTo.getFirstname() + " " + userTo.getLastname() + " successfully!";
+                log.info("Sending email about uploading files to " + userFrom.getGroup().getGroupname() + " .");
+
+                Mail mail = new Mail();
+                mail.setFrom("vvo.082015@gmail.com");
+                mail.setTo(userTo.getEmail());
+                mail.setSubject("Uploading new files in your's group");
+
+                mail.setContent("Уважаемый(-ая) " + userTo.getFirstname() + " " + userTo.getLastname() + " ! \n\n"
+                        + "Уведомляем Вас о том, что пользователем " + userFrom.getLogin() + " Вашей группы "
+                        + userFrom.getGroup().getGroupname() + " был загружен следующий файл: \n"
+                        + filename + " . \n\n"
+                        + "С уважением, \n"
+                        + "Uploader.");
+
+                mailService.sendMessage(mail);
+            }
+
+            return "Email sent to group " + userFrom.getGroup().getGroupname() + " successfully!";
         } catch (Exception e) {
-            log.error("Unable to send email!", e);
+            log.error("Unable to send email to group " + userFrom.getGroup().getGroupname() + " !", e.getMessage());
 
-            throw new EmailSendException("Error in sending email to " + userTo.getFirstname()
-                    + " " + userTo.getLastname() + " : " + e.getMessage(), e);
+            throw new EmailSendException("Error in sending email to " + userFrom.getGroup().getGroupname(), e);
         }
     }
 }
